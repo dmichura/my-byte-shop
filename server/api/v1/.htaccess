@@ -1,4 +1,8 @@
+Options -Indexes 
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+
+# Blokowanie dostępu do folderów /lib i /endpoints
+RewriteRule ^(lib|endpoints)/ - [F,L]
 RewriteRule ^(.*)$ index.php [QSA,L]

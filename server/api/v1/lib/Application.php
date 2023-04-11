@@ -1,15 +1,35 @@
 <?php
+// Application class
 class Application {
     private Request $req;
     private Response $res;
-
-    public function __construct($routes = [], $nav = [])
+    public function __construct()
     {
-    }
+        $this->req = new Request();
+        $this->res = new Response();
 
-    public function run()
-    {
-        header ('Content-Type: text/html; charset=utf-8');
+        $path = $this->req->getPath();
+        $controllerPath = array_slice(explode("/", $path), 2);
+        $pathFile = realpath( sprintf("%s//controller//%s.php", APP_PATH, strtolower($controllerPath[0])) );
+        $controllerExist = file_exists($pathFile) ? true : false;
+        
+
+        if($controllerExist)
+        {
+            ob_start();
+            include_once $pathFile;
+            ob_clean();
+        }
+        else
+        {
+            $this->res->setCode(404);
+            $this->res->setData([
+                "success" => false,
+            ]);
+        }
+
+        $this->res->resolve(  );
     }
 }
+
 ?>
